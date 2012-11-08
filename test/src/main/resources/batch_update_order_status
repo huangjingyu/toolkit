@@ -1,0 +1,16 @@
+declare
+	shipment_id			comp_shipment_packages.shipment_id%TYPE;
+	shipment_status_id	comp_shipments.comp_shipments%TYPE;
+	update_str			varchar2(1000);
+begin
+	select t.shipment_id into shipment_id from comp_shipment_packages t where t.tracking_id = '<trackingId>';
+	select t.shipment_status_id into shipment_status_id from comp_shipments t where t.shipment_id = '<shipmentId>';
+	if shipment_status_id = '65' then		
+		update_str := 'update comp_shipments set shipment_status_id=:a,shipment_reason_id=:b where shipment_id=:c';
+		execute immediate update_str using '63','1',shipment_id;
+		commit;
+	else
+		dbms_output.put_line(shipment_id | ' is not changed');
+	end if;	
+end;
+/
