@@ -47,9 +47,11 @@ public class DefaultLogPuller extends AbstractLogPuller {
 
         String cmd = st.render();
         Executor executor = new DefaultExecutor();
+        executor.setExitValues(new int[] { 0, 3 });
         CommandLine cmdLine = CommandLine.parse(cmd);
         int exitValue = executor.execute(cmdLine);
-        return exitValue == 0;
+        System.out.println("exit value is " + exitValue);
+        return exitValue == 0 || exitValue == 3;
     }
 
 }
