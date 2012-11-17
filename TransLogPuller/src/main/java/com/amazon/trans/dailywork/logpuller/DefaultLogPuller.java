@@ -50,7 +50,6 @@ public class DefaultLogPuller extends AbstractLogPuller {
         executor.setExitValues(new int[] { 0, 3 });
         CommandLine cmdLine = CommandLine.parse(cmd);
         int exitValue = executor.execute(cmdLine);
-        System.out.println("exit value is " + exitValue);
         return exitValue == 0 || exitValue == 3;
     }
 
