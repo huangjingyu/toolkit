@@ -10,16 +10,24 @@ public class Main {
     public static void main(String[] args) throws Exception {
         CommandLineParser parser = new PosixParser();
         Options options = ProgramArgs.supportOptions();
+        if (args == null || args.length == 0) {
+            printHelp(options);
+            return;
+        }
         CommandLine cmdLine = null;
         try {
             cmdLine = parser.parse(options, args);
         } catch (Exception e) {
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("process_update.sh", options);
+            printHelp(options);
             return;
         }
         ProgramArgs argsObj = ProgramArgs.parse(cmdLine);
         LogPuller puller = new DefaultLogPuller();
         puller.pull(argsObj);
+    }
+
+    private static void printHelp(Options options) {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("trans_log_puller.sh", options);
     }
 }
