@@ -19,5 +19,7 @@ public class Main {
             return;
         }
         ProgramArgs argsObj = ProgramArgs.parse(cmdLine);
+        LogPuller puller = new DefaultLogPuller();
+        puller.pull(argsObj);
     }
 }
