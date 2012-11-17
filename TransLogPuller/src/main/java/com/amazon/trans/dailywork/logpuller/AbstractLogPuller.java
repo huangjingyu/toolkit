@@ -3,7 +3,7 @@ package com.amazon.trans.dailywork.logpuller;
 public abstract class AbstractLogPuller implements LogPuller {
 
     @Override
-    public void pull(ProgramArgs args) {
+    public void pull(ProgramArgs args) throws Exception {
         String envName = args.getEnvName();
         String realm = args.getRealm();
         String domain = args.getDomain();
@@ -20,6 +20,6 @@ public abstract class AbstractLogPuller implements LogPuller {
         }
     }
 
-    public abstract void pull(String hostName, String remoteFilePath, String localDestDirPath);
+    public abstract void pull(String hostName, String remoteFilePath, String localDestDirPath) throws Exception;
 
 }

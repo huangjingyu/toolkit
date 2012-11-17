@@ -67,6 +67,9 @@ public class ProgramArgs {
         if (cmdLine.hasOption("logTime")) {
             t.setLogTime(cmdLine.getOptionValue("logTime"));
         }
+        if (cmdLine.hasOption("destDir")) {
+            t.setDestDirPath(cmdLine.getOptionValue("destDir"));
+        }
         return t;
     }
 
