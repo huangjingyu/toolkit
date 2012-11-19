@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -21,12 +22,18 @@ import org.apache.commons.lang.StringUtils;
 import org.stringtemplate.v4.ST;
 
 public class Util {
-    private static final String LINUX_GET_REMOTE_DATE_CMD = "ssh -o StrictHostKeyChecking=no <hostName> \"date -u \"+%Y-%m-%d-%H\"\"";
-    private static final String WIN_GET_REMOTE_DATE_CMD = "cmd.exe /c echo y | <sshPath> <hostName> \"date -u \"+%Y-%m-%d-%H\"\"";
+    // date -u \"+%Y-%m-%d-%H\"
+    private static final String LINUX_GET_REMOTE_DATE_CMD = "ssh -o StrictHostKeyChecking=no <hostName> \"date\"";
+    private static final String WIN_GET_REMOTE_DATE_CMD = "cmd.exe /c echo y | <sshPath> <hostName> \"date\"";
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
     private static final DateFormat LOG_TIME_DF = new SimpleDateFormat("yyyy-MM-dd-HH");
     static {
         LOG_TIME_DF.setTimeZone(UTC);
+    }
+
+    private static final DateFormat LINUX_TIME_DF = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+    static {
+        LINUX_TIME_DF.setTimeZone(UTC);
     }
 
     public static boolean isWindows() {
@@ -47,14 +54,15 @@ public class Util {
         st.add("hostName", hostName);
         String cmd = st.render();
         Executor executor = new DefaultExecutor();
+        executor.setExitValues(new int[] { 0, 127 });
         GetCurrentLogTimeStreamHandler streamHandler = new GetCurrentLogTimeStreamHandler();
         executor.setStreamHandler(streamHandler);
         executor.execute(CommandLine.parse(cmd));
-        String logTime = streamHandler.getLogTime();
-        if (StringUtils.isEmpty(logTime)) {
+        Date logTime = streamHandler.getLogTime();
+        if (logTime == null) {
             throw new Exception("fail to get current log time from host " + hostName);
         }
-        return logTime;
+        return LOG_TIME_DF.format(logTime);
     }
 
     public static String[] getLogTimes(String since, String until) throws ParseException {
@@ -115,7 +123,7 @@ public class Util {
     }
 
     private static class GetCurrentLogTimeStreamHandler implements ExecuteStreamHandler {
-        private String logTime = "";
+        private Date logTime;
         private InputStream out;
         private InputStream err;
         private static final Pattern PAT = Pattern.compile("\\d+-\\d+-\\d+-\\d+");
@@ -136,12 +144,17 @@ public class Util {
 
         @Override
         public void start() throws IOException {
-            List<String> list = IOUtils.readLines(out);
+            List<String> list = new ArrayList<String>();
+            list.addAll(IOUtils.readLines(err));
+            list.addAll(IOUtils.readLines(out));
             if (list != null && list.size() > 0) {
                 for (String s : list) {
-                    if (PAT.matcher(s).matches()) {
-                        logTime = s;
-                        break;
+                    try {
+                        logTime = LINUX_TIME_DF.parse(s);
+                        if (logTime != null) {
+                            break;
+                        }
+                    } catch (Exception e) {
                     }
                 }
             }
@@ -151,7 +164,7 @@ public class Util {
         public void stop() {
         }
 
-        public String getLogTime() {
+        public Date getLogTime() {
             return logTime;
         }
     }
