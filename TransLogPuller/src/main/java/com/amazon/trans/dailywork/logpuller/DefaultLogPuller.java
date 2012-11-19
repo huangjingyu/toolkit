@@ -10,6 +10,8 @@ import org.stringtemplate.v4.ST;
 
 public class DefaultLogPuller extends AbstractLogPuller {
 
+    // TODO bug, file name is the same for all hosts
+
     @Override
     public void pull(String hostName, String remoteFilePath, String localDestDirPath) throws Exception {
         String action = "pull " + remoteFilePath + " from " + hostName + " to " + localDestDirPath;
