@@ -10,6 +10,6 @@ do
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 _PWD=`pwd`
-cd DIR
+cd $DIR
 java -jar $DIR/TransLogPuller.jar $@
-cd _PWD
+cd $_PWD
