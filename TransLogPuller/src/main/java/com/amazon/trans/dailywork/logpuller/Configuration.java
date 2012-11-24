@@ -64,6 +64,10 @@ public class Configuration {
         return conf.getString("domain.default");
     }
 
+    public String get(String key) {
+        return conf.getString(key);
+    }
+
     private String join(String[] arr) {
         for (int i = 0; i < arr.length; i++) {
             arr[i] = arr[i].toLowerCase();

@@ -18,13 +18,14 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.commons.exec.Executor;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.stringtemplate.v4.ST;
 
 public class Util {
     // date -u \"+%Y-%m-%d-%H\"
-    private static final String LINUX_GET_REMOTE_DATE_CMD = "ssh -o StrictHostKeyChecking=no <hostName> \"date\"";
-    private static final String WIN_GET_REMOTE_DATE_CMD = "cmd.exe /c echo y | <sshPath> <hostName> \"date\"";
+    private static final String LINUX_GET_REMOTE_DATE_CMD = Configuration.getInstance().get(
+            "linux.gettime.cmd.template");
+    private static final String WIN_GET_REMOTE_DATE_CMD = Configuration.getInstance().get(
+            "windows.gettime.cmd.template");
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
     private static final DateFormat LOG_TIME_DF = new SimpleDateFormat("yyyy-MM-dd-HH");
     static {

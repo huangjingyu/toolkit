@@ -34,9 +34,9 @@ public class DefaultLogPuller extends AbstractLogPuller {
     private static final Pattern FILE_SEP = Pattern.compile("[/\\\\]");
 
     private boolean _pull(String hostName, String remoteFilePath, String localDestDirPath) throws Exception {
-        String cmdTemplate = "<scp> -o StrictHostKeyChecking=no <hostName>:<remoteFilePath> <localFilePath>";
+        String cmdTemplate = Configuration.getInstance().get("linux.pull.cmd.template");
         if (Util.isWindows()) {
-            cmdTemplate = "cmd.exe /c echo y | <scp> <hostName>:<remoteFilePath> <localFilePath>";
+            cmdTemplate = Configuration.getInstance().get("windows.pull.cmd.template");
         }
         String[] arr = FILE_SEP.split(remoteFilePath);
         String fileName = arr[arr.length - 1];
