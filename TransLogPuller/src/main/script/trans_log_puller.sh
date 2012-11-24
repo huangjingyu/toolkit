@@ -9,4 +9,4 @@ do
   DIR="$( cd -P "$( dirname "$SOURCE"  )" && pwd )"
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-java -cp $DIR -jar $DIR/TransLogPuller.jar $@
+java -jar $DIR/TransLogPuller.jar $@
