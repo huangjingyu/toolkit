@@ -18,19 +18,14 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteStreamHandler;
 import org.apache.commons.exec.Executor;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.stringtemplate.v4.ST;
 
 public class Util {
     // date -u \"+%Y-%m-%d-%H\"
-    private static final String LINUX_GET_REMOTE_DATE_CMD = Configuration.getInstance().get(
-            "linux.gettime.cmd.template");
-    private static final String WIN_GET_REMOTE_DATE_CMD = Configuration.getInstance().get(
-            "windows.gettime.cmd.template");
+    private static final String LINUX_GET_REMOTE_DATE_CMD = Configuration.getInstance().get("linux.gettime.cmd.template");
+    private static final String WIN_GET_REMOTE_DATE_CMD = Configuration.getInstance().get("windows.gettime.cmd.template");
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
-    private static final DateFormat LOG_TIME_DF = new SimpleDateFormat("yyyy-MM-dd-HH");
-    static {
-        LOG_TIME_DF.setTimeZone(UTC);
-    }
 
     private static final DateFormat LINUX_TIME_DF = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
     static {
@@ -42,7 +37,7 @@ public class Util {
         return os.indexOf("win") > -1;
     }
 
-    public static String getCurrentLogTime(String hostName) throws Exception {
+    public static String getCurrentLogTime(String hostName, String logSuffixFormat) throws Exception {
         ST st = new ST(LINUX_GET_REMOTE_DATE_CMD);
         if (Util.isWindows()) {
             st = new ST(WIN_GET_REMOTE_DATE_CMD);
@@ -63,15 +58,17 @@ public class Util {
         if (logTime == null) {
             throw new Exception("fail to get current log time from host " + hostName);
         }
-        return LOG_TIME_DF.format(logTime);
+        DateFormat df = getLogDateFormat(logSuffixFormat);
+        return df.format(logTime);
     }
 
-    public static String[] getLogTimes(String since, String until) throws ParseException {
-        Date sd = LOG_TIME_DF.parse(since);
+    public static String[] getLogTimes(String since, String until, String logSuffixFormat) throws ParseException {
+        DateFormat df = getLogDateFormat(logSuffixFormat);
+        Date sd = df.parse(since);
         Calendar sc = Calendar.getInstance(UTC);
         sc.setTime(sd);
 
-        Date ud = LOG_TIME_DF.parse(until);
+        Date ud = df.parse(until);
         Calendar uc = Calendar.getInstance(UTC);
         uc.setTime(ud);
 
@@ -87,8 +84,9 @@ public class Util {
         return logTimes;
     }
 
-    public static String[] getLogTimes(String logTime, Integer lastHours) throws ParseException {
-        Date date = LOG_TIME_DF.parse(logTime);
+    public static String[] getLogTimes(String logTime, Integer lastHours, String logSuffixFormat) throws ParseException {
+        DateFormat df = getLogDateFormat(logSuffixFormat);
+        Date date = df.parse(logTime);
         Calendar cal = Calendar.getInstance(UTC);
         cal.setTime(date);
         String[] logTimes = new String[lastHours.intValue() + 1];
@@ -121,6 +119,15 @@ public class Util {
         }
         sb.append(hour);
         return sb.toString();
+    }
+
+    private static DateFormat getLogDateFormat(String logSuffixFormat) {
+        if (StringUtils.isEmpty(logSuffixFormat)) {
+            logSuffixFormat = "yyyy-MM-dd-HH";
+        }
+        DateFormat df = new SimpleDateFormat(logSuffixFormat);
+        df.setTimeZone(UTC);
+        return df;
     }
 
     private static class GetCurrentLogTimeStreamHandler implements ExecuteStreamHandler {

@@ -31,8 +31,10 @@ public abstract class AbstractLogPuller implements LogPuller {
             throw new Exception("no hosts specified");
         }
 
+        String logSuffixFormat = Configuration.getInstance().getLogsSuffixFormat(envName);
+
         if (current) {
-            logTime = Util.getCurrentLogTime(hosts[0]);
+            logTime = Util.getCurrentLogTime(hosts[0], logSuffixFormat);
         }
         String[] logTimes = null;
         if (StringUtils.isEmpty(logTime)) {
@@ -40,13 +42,13 @@ public abstract class AbstractLogPuller implements LogPuller {
                 throw new Exception("can't calculate logTime");
             }
             if (StringUtils.isEmpty(until)) {
-                until = Util.getCurrentLogTime(hosts[0]);
+                until = Util.getCurrentLogTime(hosts[0], logSuffixFormat);
             }
-            logTimes = Util.getLogTimes(since, until);
+            logTimes = Util.getLogTimes(since, until, logSuffixFormat);
         } else if (lastHours == null) {
             logTimes = new String[] { logTime };
         } else {
-            logTimes = Util.getLogTimes(logTime, lastHours);
+            logTimes = Util.getLogTimes(logTime, lastHours, logSuffixFormat);
         }
 
         String[] logs = null;

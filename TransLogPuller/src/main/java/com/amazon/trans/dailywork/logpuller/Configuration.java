@@ -56,6 +56,11 @@ public class Configuration {
         return dir;
     }
 
+    public String getLogsSuffixFormat(String envName) {
+        String key = join(new String[] { envName, "logs.suffix.format" });
+        return conf.getString(key, "");
+    }
+
     public String getDefaultRealm() {
         return conf.getString("realm.default");
     }
