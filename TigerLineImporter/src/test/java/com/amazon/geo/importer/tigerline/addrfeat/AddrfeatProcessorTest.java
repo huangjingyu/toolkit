@@ -2,13 +2,15 @@ package com.amazon.geo.importer.tigerline.addrfeat;
 
 import org.junit.Test;
 
+import com.amazon.geo.importer.tigerline.BaseTest;
+import com.amazon.geo.importer.tigerline.SystemOutRecordWriter;
 import com.amazon.geo.importer.tigerline.TLShapefileRecordWriter;
 
-public class AddrfeatProcessorTest {
+public class AddrfeatProcessorTest extends BaseTest {
     @Test
     public void test() throws Exception {
         AddrfeatProcessor p = new AddrfeatProcessor();
-        TLShapefileRecordWriter writer = new AddrfeatRecordWriter("/Users/jyhuang/Documents/work/geocoding/tl_2012_06001_addrfeat.output");
-        p.process("/Users/jyhuang/Documents/work/geocoding/ADDRFEAT/tl_2012_06001_addrfeat", writer);
+        TLShapefileRecordWriter writer = new SystemOutRecordWriter();
+        p.process(dataDir + "tl_2012_01011_addrfeat", writer);
     }
 }

@@ -11,6 +11,7 @@ import org.geotools.data.simple.SimpleFeatureIterator;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.opengis.feature.simple.SimpleFeature;
 
+import com.amazon.geo.importer.tigerline.AnsiMapping;
 import com.amazon.geo.importer.tigerline.TLShapefileProcessor;
 import com.amazon.geo.importer.tigerline.TLShapefileRecordWriter;
 import com.amazon.geo.importer.tigerline.ZipCityMapping;
@@ -28,6 +29,12 @@ public class AddrfeatProcessor implements TLShapefileProcessor {
                 return name.endsWith(".shp");
             }
         })[0];
+        String[] arr = shpFile.getName().split("_");
+        String state = "";
+        try {
+            state = AnsiMapping.getInstance().getState(arr[2].substring(0, 2));
+        } catch (Throwable t) {
+        }
         FileDataStore store = FileDataStoreFinder.getDataStore(shpFile);
         SimpleFeatureSource featureSource = store.getFeatureSource();
         SimpleFeatureCollection features = featureSource.getFeatures();
@@ -39,6 +46,7 @@ public class AddrfeatProcessor implements TLShapefileProcessor {
             Coordinate coord = geometry.getCoordinate();
 
             AddrfeatRecord rec = new AddrfeatRecord();
+            rec.setState(state);
             rec.setLatitude(coord.x);
             rec.setLongitude(coord.y);
             rec.setFullname(getAttr(feature, "FULLNAME"));
