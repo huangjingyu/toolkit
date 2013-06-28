@@ -30,6 +30,8 @@ public class Main {
         FileInputFormat.setInputPaths(conf, new Path(args[0]));
         FileOutputFormat.setOutputPath(conf, new Path(args[1]));
 
+        conf.setNumReduceTasks(0);
+
         JobClient.runJob(conf);
     }
 }
