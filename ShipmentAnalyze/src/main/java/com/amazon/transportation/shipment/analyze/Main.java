@@ -18,6 +18,7 @@ public class Main {
         conf.setOutputValueClass(StatePaymentRecord.class);
 
         conf.setMapperClass(StatePaymentMethodMapper.class);
+        conf.setCombinerClass(StatePaymentMethodReducer.class);
         conf.setReducerClass(StatePaymentMethodReducer.class);
 
         conf.setInputFormat(TextInputFormat.class);
