@@ -49,6 +49,7 @@ public class AddrfeatProcessor implements TLShapefileProcessor {
 
             AddrfeatRecord rec = new AddrfeatRecord();
             rec.setState(state);
+            rec.setCounty(county);
             rec.setLatitude(coord.x);
             rec.setLongitude(coord.y);
             rec.setFullname(getAttr(feature, "FULLNAME"));
