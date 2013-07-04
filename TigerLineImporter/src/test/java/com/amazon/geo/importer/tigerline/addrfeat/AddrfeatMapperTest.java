@@ -29,6 +29,7 @@ public class AddrfeatMapperTest extends BaseTest {
 
         AddrfeatMapper mapper = new AddrfeatMapper();
         mapper.map(NullWritable.get(), value, new MyOutputCollector(), null);
+        mapper.close();
     }
 
     private static class MyOutputCollector implements OutputCollector<NullWritable, Text> {

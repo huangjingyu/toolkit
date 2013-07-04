@@ -15,6 +15,7 @@ public class AddrfeatRecord implements TLShapefileRecord {
     private String plus4l;
     private String plus4r;
     private String city;
+    private String county;
     private String state;
 
     public String getFullname() {
@@ -113,6 +114,14 @@ public class AddrfeatRecord implements TLShapefileRecord {
         this.city = city;
     }
 
+    public String getCounty() {
+        return county;
+    }
+
+    public void setCounty(String county) {
+        this.county = county;
+    }
+
     public String getState() {
         return state;
     }
@@ -126,7 +135,7 @@ public class AddrfeatRecord implements TLShapefileRecord {
         return "AddrfeatRecord [latitude=" + latitude + ", longitude=" + longitude + ", fullname=" + fullname + ", leftFromHouseNumber="
                 + leftFromHouseNumber + ", leftToHouseNumber=" + leftToHouseNumber + ", rightFromHouseNumber=" + rightFromHouseNumber
                 + ", rightToHouseNumber=" + rightToHouseNumber + ", zipl=" + zipl + ", zipr=" + zipr + ", plus4l=" + plus4l + ", plus4r="
-                + plus4r + ", city=" + city + ", state=" + state + "]";
+                + plus4r + ", city=" + city + ", county=" + county + ", state=" + state + "]";
     }
 
 }

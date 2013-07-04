@@ -31,8 +31,10 @@ public class AddrfeatProcessor implements TLShapefileProcessor {
         })[0];
         String[] arr = shpFile.getName().split("_");
         String state = "";
+        String county = "";
         try {
             state = AnsiMapping.getInstance().getState(arr[2].substring(0, 2));
+            county = AnsiMapping.getInstance().getCounty(arr[2]);
         } catch (Throwable t) {
         }
         FileDataStore store = FileDataStoreFinder.getDataStore(shpFile);
