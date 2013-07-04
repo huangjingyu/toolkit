@@ -78,9 +78,14 @@ public class AddrfeatMapper extends MapReduceBase implements Mapper<NullWritable
             sb.append(fromHouse).append("-").append(toHouse).append(DELIMITER);
             sb.append(rec.getFullname()).append(DELIMITER);
             sb.append(rec.getCity()).append(DELIMITER);
+            sb.append(rec.getCounty()).append(DELIMITER);
             sb.append(rec.getState()).append(DELIMITER);
             sb.append(rec.getLatitude()).append(DELIMITER);
-            sb.append(rec.getLongitude());
+            sb.append(rec.getLongitude()).append(DELIMITER);
+            sb.append(rec.getZipl()).append(DELIMITER);
+            sb.append(rec.getZipr()).append(DELIMITER);
+            sb.append(rec.getPlus4l()).append(DELIMITER);
+            sb.append(rec.getPlus4r());
         }
 
     }
